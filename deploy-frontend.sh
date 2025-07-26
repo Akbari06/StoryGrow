@@ -23,8 +23,14 @@ npm install
 echo "🔨 Building Next.js app..."
 npm run build
 
-# The static files are now in 'out' directory due to output: 'export'
-echo "✅ Build complete!"
+# Check if build was successful
+if [ ! -d "out" ]; then
+    echo "❌ Build failed - 'out' directory not found"
+    echo "   Check for build errors above"
+    exit 1
+fi
+
+echo "✅ Build complete! Found $(find out -type f | wc -l) files"
 
 # Go back to project root
 cd ../..
