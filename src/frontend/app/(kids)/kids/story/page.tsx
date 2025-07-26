@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import StoryViewer from '@/components/StoryViewer'
 import { config } from '@/lib/config'
 
@@ -19,19 +19,22 @@ interface Story {
   }
 }
 
-export default function StoryPage() {
-  const params = useParams()
+function StoryContent() {
+  const searchParams = useSearchParams()
   const router = useRouter()
+  const storyId = searchParams.get('id')
   const [story, setStory] = useState<Story | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchStory()
-  }, [params.id])
+    if (storyId) {
+      fetchStory(storyId)
+    }
+  }, [storyId])
 
-  const fetchStory = async () => {
+  const fetchStory = async (id: string) => {
     try {
-      const response = await fetch(`${config.apiUrl}/api/story/${params.id}`)
+      const response = await fetch(`${config.apiUrl}/api/story/${id}`)
       const data = await response.json()
       setStory(data)
     } catch (error) {
@@ -39,6 +42,22 @@ export default function StoryPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (!storyId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-2xl text-gray-600 mb-4">No story selected!</p>
+          <button 
+            onClick={() => router.push('/kids/home')}
+            className="kids-button"
+          >
+            Create a new story
+          </button>
+        </div>
+      </div>
+    )
   }
 
   if (loading) {
@@ -78,5 +97,17 @@ export default function StoryPage() {
         </button>
       </div>
     </div>
+  )
+}
+
+export default function StoryPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-4xl animate-pulse">Loading... 📖</div>
+      </div>
+    }>
+      <StoryContent />
+    </Suspense>
   )
 }

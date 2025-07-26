@@ -47,8 +47,8 @@ export default function RecordPage() {
 
       const { story_id } = await storyResponse.json()
 
-      // Navigate to story view
-      router.push(`/kids/story/${story_id}`)
+      // Navigate to story view with query parameter
+      router.push(`/kids/story?id=${story_id}`)
     } catch (error) {
       console.error('Error creating story:', error)
       setIsProcessing(false)
