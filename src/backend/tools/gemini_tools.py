@@ -9,13 +9,20 @@ class GeminiClient:
     """Wrapper for Gemini API with prompt templates"""
     
     def __init__(self):
+        self.mock_mode = False
         if not config.GEMINI_API_KEY:
-            raise ValueError("GEMINI_API_KEY environment variable is not set")
-        genai.configure(api_key=config.GEMINI_API_KEY)
-        self.model = genai.GenerativeModel('gemini-pro')
+            print("[GeminiClient] Warning: GEMINI_API_KEY not set, using mock mode")
+            self.mock_mode = True
+        else:
+            genai.configure(api_key=config.GEMINI_API_KEY)
+            self.model = genai.GenerativeModel('gemini-pro')
         
     async def generate(self, prompt: str, **kwargs) -> str:
         """Generate text using Gemini"""
+        if self.mock_mode:
+            # Return mock response for testing
+            return "Once upon a time in a magical forest, there lived a happy little bunny who loved to explore..."
+        
         try:
             response = await asyncio.to_thread(
                 self.model.generate_content,

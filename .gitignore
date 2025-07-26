@@ -51,3 +51,9 @@ service-account-key.json
 
 # Local development
 local-dev/
+
+# CLAUDE
+CLAUDE.md 
+secretCLAUDE.md
+
+
