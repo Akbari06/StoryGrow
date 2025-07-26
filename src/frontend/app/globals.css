@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+/* CSS Variables for Kids Interface */
+.kids-theme {
+  --color-magic-purple: #8B5CF6;
+  --color-sunshine-yellow: #FCD34D;
+  --color-coral-pink: #FF6B9D;
+  --color-sky-blue: #7DD3FC;
+  --color-grass-green: #4ADE80;
+  --color-warm-cream: #FEF3C7;
+  
+  --font-kids: 'Quicksand', sans-serif;
+  --radius-kids: 24px;
+}
+
+/* CSS Variables for Parent Interface */
+.parent-theme {
+  --color-deep-indigo: #4F46E5;
+  --color-sage-green: #10B981;
+  --color-warm-amber: #F59E0B;
+  --color-neutral-gray: #6B7280;
+  --color-off-white: #FAFAF9;
+  
+  --font-parent: 'Inter', sans-serif;
+  --radius-parent: 8px;
+}
+
+/* Global Animations */
+@keyframes bounce-in {
+  0% { transform: scale(0.8); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5); }
+  50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.8); }
+}
+
+/* Kids Interface Styles */
+.kids-button {
+  @apply bg-gradient-to-r from-purple-500 to-pink-500 text-white;
+  @apply font-bold text-2xl py-6 px-12 rounded-full;
+  @apply transform transition-all duration-200;
+  @apply shadow-lg hover:shadow-xl active:scale-95;
+  font-family: var(--font-kids);
+}
+
+.kids-card {
+  @apply bg-white rounded-3xl p-8 shadow-xl;
+  @apply border-4 border-transparent;
+  @apply transition-all duration-300;
+  @apply hover:border-purple-400 hover:-translate-y-2;
+}
+
+/* Parent Interface Styles */
+.parent-button {
+  @apply bg-indigo-600 text-white;
+  @apply font-medium text-sm py-2 px-4 rounded-md;
+  @apply transition-all duration-150;
+  @apply hover:bg-indigo-700 hover:shadow-md;
+  font-family: var(--font-parent);
+}
+
+.parent-card {
+  @apply bg-white rounded-lg p-6 shadow-sm;
+  @apply border border-gray-200;
+  @apply transition-all duration-150;
+  @apply hover:shadow-md;
+}
