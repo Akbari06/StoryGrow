@@ -5,6 +5,15 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
+/* Apply fonts globally */
+.kids-theme {
+  font-family: 'Quicksand', sans-serif;
+}
+
+.parent-theme {
+  font-family: 'Inter', sans-serif;
+}
+
 /* CSS Variables for Kids Interface */
 .kids-theme {
   --color-magic-purple: #8B5CF6;

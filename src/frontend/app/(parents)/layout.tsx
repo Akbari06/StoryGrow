@@ -21,12 +21,6 @@ export default function ParentsLayout({
 
   return (
     <div className="min-h-screen bg-gray-50 parent-theme">
-      <style jsx global>{`
-        body {
-          font-family: 'Inter', sans-serif;
-        }
-      `}</style>
-      
       <div className="flex">
         {/* Sidebar */}
         <aside className={`
