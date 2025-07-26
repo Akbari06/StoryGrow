@@ -113,10 +113,13 @@ async def demo_mode():
 
 def server_mode():
     """
-    Production server mode - runs both backend API and frontend
+    Production server mode - runs backend API server
     """
-    print("🚀 Starting StoryGrow in Server Mode")
+    print("🚀 Starting StoryGrow API Server")
     print("-" * 40)
+    
+    # Check if running in Cloud Run
+    is_cloud_run = os.getenv('K_SERVICE') is not None
     
     processes = []
     
@@ -129,53 +132,64 @@ def server_mode():
         
         # Start backend API server
         print("Starting API server...")
-        api_process = subprocess.Popen(
-            [sys.executable, "-m", "uvicorn", "api_server:app", 
-             "--host", config.API_HOST, 
-             "--port", str(config.API_PORT),
-             "--reload"],
-            cwd=os.path.dirname(os.path.abspath(__file__))
-        )
-        processes.append(api_process)
-        print(f"✓ API server running at http://{config.API_HOST}:{config.API_PORT}")
         
-        # Check if frontend exists
-        frontend_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend")
-        if os.path.exists(frontend_path) and os.path.exists(os.path.join(frontend_path, "package.json")):
-            print("\nStarting frontend development server...")
-            frontend_process = subprocess.Popen(
-                ["npm", "run", "dev"],
-                cwd=frontend_path,
-                shell=True if os.name == 'nt' else False
-            )
-            processes.append(frontend_process)
-            print("✓ Frontend running at http://localhost:3000")
+        if is_cloud_run:
+            # In Cloud Run, run directly without subprocess
+            import uvicorn
+            print(f"✓ API server starting on http://{config.API_HOST}:{config.API_PORT}")
+            uvicorn.run("api_server:app", 
+                       host=config.API_HOST, 
+                       port=config.API_PORT,
+                       log_level="info")
         else:
-            print("\n⚠️  Frontend not found. To create it:")
-            print("   cd src")
-            print("   npx create-next-app@latest frontend --typescript --tailwind --app")
-            print("   cd frontend && npm install")
+            # Local development - use subprocess
+            api_process = subprocess.Popen(
+                [sys.executable, "-m", "uvicorn", "api_server:app", 
+                 "--host", config.API_HOST, 
+                 "--port", str(config.API_PORT),
+                 "--reload"],
+                cwd=os.path.dirname(os.path.abspath(__file__))
+            )
+            processes.append(api_process)
+            print(f"✓ API server running at http://{config.API_HOST}:{config.API_PORT}")
+            
+            # Only try to start frontend in local development
+            frontend_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend")
+            if os.path.exists(frontend_path) and os.path.exists(os.path.join(frontend_path, "package.json")):
+                print("\nStarting frontend development server...")
+                frontend_process = subprocess.Popen(
+                    ["npm", "run", "dev"],
+                    cwd=frontend_path,
+                    shell=True if os.name == 'nt' else False
+                )
+                processes.append(frontend_process)
+                print("✓ Frontend running at http://localhost:3000")
+            else:
+                print("\n📍 Note: Frontend should be deployed separately (e.g., Firebase Hosting, Vercel)")
+                print("   For local development with frontend:")
+                print("   cd src/frontend && npm run dev")
         
-        print("\n✨ StoryGrow is running!")
-        print("📱 Open http://localhost:3000 to use the app")
-        print("📚 API docs available at http://localhost:8080/docs")
-        print("Press Ctrl+C to stop all services")
-        print("-" * 40)
-        
-        # Wait for keyboard interrupt
-        try:
-            while True:
-                # Check if processes are still running
-                for process in processes[:]:
-                    if process.poll() is not None:
-                        print(f"Process {process.pid} exited")
-                        processes.remove(process)
-                
-                if not processes:
-                    print("All processes exited")
-                    break
+        if not is_cloud_run:
+            print("\n✨ StoryGrow is running!")
+            print("📱 Open http://localhost:3000 to use the app")
+            print("📚 API docs available at http://localhost:8080/docs")
+            print("Press Ctrl+C to stop all services")
+            print("-" * 40)
+            
+            # Wait for keyboard interrupt
+            try:
+                while True:
+                    # Check if processes are still running
+                    for process in processes[:]:
+                        if process.poll() is not None:
+                            print(f"Process {process.pid} exited")
+                            processes.remove(process)
                     
-                asyncio.get_event_loop().run_until_complete(asyncio.sleep(1))
+                    if not processes:
+                        print("All processes exited")
+                        break
+                        
+                    asyncio.get_event_loop().run_until_complete(asyncio.sleep(1))
         except KeyboardInterrupt:
             pass
             
