@@ -14,7 +14,7 @@ class Config:
     
     # API Settings
     API_HOST = os.getenv('API_HOST', '0.0.0.0')
-    API_PORT = int(os.getenv('API_PORT', 8080))
+    API_PORT = int(os.getenv('PORT', os.getenv('API_PORT', 8080)))
     
     # Frontend URL
     FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
