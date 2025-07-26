@@ -14,6 +14,7 @@ from config import config
 from planner import Planner
 from executor import Executor
 from memory import Memory
+from database import db
 
 # Create FastAPI app
 app = FastAPI(
@@ -35,6 +36,22 @@ app.add_middleware(
 planner = Planner()
 executor = Executor()
 memory = Memory()
+
+# Startup event to connect to database
+@app.on_event("startup")
+async def startup_event():
+    """Connect to database on startup"""
+    connected = await db.connect()
+    if connected:
+        print("[API] Database connected successfully")
+    else:
+        print("[API] Warning: Database connection failed")
+
+# Shutdown event to disconnect from database
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Disconnect from database on shutdown"""
+    await db.disconnect()
 
 # Request/Response models
 class StoryRequest(BaseModel):
@@ -80,6 +97,59 @@ async def health_check():
             "gemini": "configured" if config.GEMINI_API_KEY else "not configured"
         }
     }
+
+@app.get("/database/test")
+async def test_database():
+    """Test database connection and return info"""
+    try:
+        # Test database connection
+        db_info = await db.test_connection()
+        
+        # Add additional health info
+        db_info['timestamp'] = datetime.now().isoformat()
+        db_info['api_status'] = 'running'
+        
+        return JSONResponse(
+            status_code=200 if db_info['status'] == 'connected' else 500,
+            content=db_info
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={
+                'status': 'error',
+                'error': str(e),
+                'timestamp': datetime.now().isoformat()
+            }
+        )
+
+@app.post("/database/init")
+async def initialize_database():
+    """Initialize database tables from schema"""
+    try:
+        # Check if already connected
+        if not db.pool:
+            connected = await db.connect()
+            if not connected:
+                raise HTTPException(status_code=500, detail="Failed to connect to database")
+        
+        # Create tables
+        success = await db.create_tables()
+        
+        if success:
+            # Get updated table info
+            db_info = await db.test_connection()
+            return {
+                'status': 'success',
+                'message': 'Database tables created successfully',
+                'tables': db_info.get('tables', []),
+                'table_count': db_info.get('table_count', 0)
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Failed to create tables")
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/story/create", response_model=StoryResponse)
 async def create_story(request: StoryRequest):
