@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "description": "StoryGrow frontend - AI-powered storytelling for children",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
