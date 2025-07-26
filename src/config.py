@@ -10,7 +10,7 @@ class Config:
     
     # Google Cloud
     GCP_PROJECT_ID = os.getenv('GCP_PROJECT_ID', 'storygrow-demo')
-    GCS_BUCKET_NAME = os.getenv('GCS_BUCKET_NAME', 'storygrow-demo-assets')
+    GCS_BUCKET_NAME = os.getenv('GCS_BUCKET_NAME', 'bucketstorygrow')
     
     # API Settings
     API_HOST = os.getenv('API_HOST', '0.0.0.0')

@@ -19,9 +19,12 @@ class Memory:
         try:
             from google.cloud import firestore
             from google.cloud.firestore_v1 import FieldFilter
-            self.db = firestore.Client(project=config.GCP_PROJECT_ID)
+            self.db = firestore.Client(
+                project=config.GCP_PROJECT_ID,
+                database="database-storygrow"  # Use specific database ID
+            )
             self.FieldFilter = FieldFilter
-            print("[Memory] Connected to Firestore")
+            print("[Memory] Connected to Firestore (database-storygrow)")
         except Exception as e:
             print(f"[Memory] Warning: Firestore not configured: {e}")
             self.db = None
