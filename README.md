@@ -2,6 +2,10 @@
 
 StoryGrow transforms children's daily experiences into personalized, illustrated stories using AI agents. Children (ages 3-8) share their day through voice or text, and our AI creates magical stories while monitoring emotional well-being for parents.
 
+🌐 **Live Demo**: [https://storygrowth2.web.app](https://storygrowth2.web.app)  
+📹 **Demo Video**: [Watch Demo](DEMO.md)  
+🚀 **Backend API**: [https://storygrow-433353767151.europe-west1.run.app](https://storygrow-433353767151.europe-west1.run.app)
+
 ## ✨ Features
 
 🎙️ **Voice & Text Input** - Children can speak or type their daily experiences  
@@ -24,38 +28,58 @@ StoryGrow uses an **agentic AI architecture** with specialized agents:
 
 ## 🚀 Quick Start
 
+### Prerequisites
+- Python 3.9+ 
+- Node.js 18+ (for frontend)
+- Google Cloud Account (for deployment)
+- Gemini API Key ([Get one here](https://makersuite.google.com/app/apikey))
+
 ### 1. Clone Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/brmnds/StoryGrow.git
 cd StoryGrow
 ```
 
-### 2. Set Up Environment
+### 2. Backend Setup
 ```bash
-# Run the setup script
-./setup.sh
+cd src/backend
 
-# Get your Gemini API key from https://makersuite.google.com/app/apikey
-# Update .env file with your API key
-```
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-### 3. Install Dependencies
-```bash
+# Install dependencies
 pip install -r requirements.txt
+
+# Create .env file from example
+cp .env.example .env
+# Edit .env and add your GEMINI_API_KEY
 ```
 
-### 4. Test Installation
+### 3. Frontend Setup (Optional for backend-only)
 ```bash
-python src/test_setup.py
+cd src/frontend
+npm install
+```
+
+### 4. Run Tests
+```bash
+# From project root
+./TEST.sh
 ```
 
 ### 5. Run Application
 ```bash
-# Demo mode (for hackathon presentation)
-python src/main.py --demo
+# Demo mode (shows agent orchestration)
+cd src/backend
+python main.py --demo
 
-# Server mode (full application)
-python src/main.py
+# API Server mode
+python main.py
+
+# Frontend (in separate terminal)
+cd src/frontend
+npm run dev
 ```
 
 ## 📂 Project Structure
@@ -63,24 +87,33 @@ python src/main.py
 ```
 StoryGrow/
 ├── src/
-│   ├── main.py              # Entry point with demo and server modes
-│   ├── config.py            # Configuration management
-│   ├── planner.py           # Task planning agent
-│   ├── executor.py          # Task execution orchestrator
-│   ├── memory.py            # Persistent memory with Firestore
-│   ├── api_server.py        # FastAPI REST API
-│   ├── agents/              # Specialized AI agents
-│   │   ├── storyteller.py   # Story generation with Gemini
-│   │   ├── emotion_detector.py # Emotional analysis
-│   │   └── illustrator.py   # Image prompt generation
-│   ├── tools/               # Shared tools and utilities
-│   │   └── gemini_tools.py  # Gemini API client
-│   └── frontend/            # Next.js frontend (optional)
-├── requirements.txt         # Python dependencies
-├── Dockerfile              # Container configuration
-├── cloudbuild.yaml         # Google Cloud Build config
-├── setup.sh                # Automated setup script
-└── README.md               # This file
+│   ├── backend/
+│   │   ├── main.py              # Entry point with demo/server modes
+│   │   ├── config.py            # Configuration management
+│   │   ├── planner.py           # Task planning agent
+│   │   ├── executor.py          # Task execution orchestrator
+│   │   ├── memory.py            # Persistent memory
+│   │   ├── api_server.py        # FastAPI REST API
+│   │   ├── agents/              # Specialized AI agents
+│   │   │   ├── storyteller.py   # Story generation
+│   │   │   ├── emotion_detector.py # Emotional analysis
+│   │   │   └── illustrator.py   # Image prompts
+│   │   ├── tools/               # Shared utilities
+│   │   │   └── gemini_tools.py  # Gemini API client
+│   │   └── requirements.txt     # Python dependencies
+│   └── frontend/                # Next.js application
+│       ├── app/                 # App router pages
+│       ├── components/          # React components
+│       └── package.json         # Node dependencies
+├── .github/workflows/           # CI/CD pipelines
+├── firebase.json               # Firebase hosting config
+├── Dockerfile                  # Full-stack container
+├── environment.yml             # Conda environment
+├── TEST.sh                     # Smoke test script
+├── ARCHITECTURE.md             # System design
+├── EXPLANATION.md              # Technical details
+├── DEMO.md                     # Demo video guide
+└── README.md                   # This file
 ```
 
 ## 🎯 Core Workflow
@@ -98,7 +131,8 @@ StoryGrow/
 Experience the full agent orchestration:
 
 ```bash
-python src/main.py --demo
+cd src/backend
+python main.py --demo
 ```
 
 This demonstrates:
@@ -107,6 +141,17 @@ This demonstrates:
 - ✅ Story generation using child's input
 - ✅ Emotional analysis and parent alerts
 - ✅ Memory usage and context management
+
+Sample output:
+```
+🌟 StoryGrow Demo Mode - AI Family Storytelling Platform 🌟
+📝 Child's Input: "Today I went to the park with mommy..."
+🧠 Planning Phase: Created 4 tasks
+⚡ Execution Phase: Running agents in parallel
+📖 Generated Story: "The Magical Butterfly Adventure"
+🎭 Emotion Analysis: happiness 0.85, excitement 0.72
+✅ Demo completed successfully!
+```
 
 ## 🔧 Configuration
 
@@ -121,21 +166,36 @@ API_PORT=8080                          # API server port
 
 ## 🚀 Deployment
 
-### Local Development
+### Option 1: Using Conda
 ```bash
-python src/main.py  # Starts both API and frontend
+conda env create -f environment.yml
+conda activate storygrow
+cd src/backend && python main.py
 ```
 
-### Google Cloud Run
-```bash
-gcloud builds submit --config cloudbuild.yaml
-```
-
-### Docker
+### Option 2: Using Docker
 ```bash
 docker build -t storygrow .
-docker run -p 8080:8080 storygrow
+docker run -p 80:80 -p 8080:8080 storygrow
 ```
+
+### Option 3: Cloud Deployment
+
+#### Backend (Google Cloud Run)
+```bash
+cd src/backend
+gcloud run deploy storygrow --source . --region europe-west1
+```
+
+#### Frontend (Firebase Hosting)
+```bash
+cd src/frontend
+npm run build
+firebase deploy --only hosting
+```
+
+### CI/CD
+Push to main branch triggers automatic deployment via GitHub Actions.
 
 ## 📊 API Endpoints
 
