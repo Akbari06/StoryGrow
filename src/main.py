@@ -191,8 +191,8 @@ def server_mode():
                         break
                         
                     asyncio.get_event_loop().run_until_complete(asyncio.sleep(1))
-        except KeyboardInterrupt:
-            pass
+            except KeyboardInterrupt:
+                pass
             
     except KeyboardInterrupt:
         print("\n\nShutting down services...")
