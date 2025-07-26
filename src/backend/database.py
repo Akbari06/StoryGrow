@@ -56,7 +56,7 @@ class Database:
                 self.connector = Connector(refresh_strategy="lazy")
                 
                 # Create connection function for the pool
-                async def get_conn():
+                async def get_conn(loop=None):
                     conn = await self.connector.connect_async(
                         self.instance_connection_name,
                         "asyncpg",
