@@ -36,3 +36,18 @@ uploads/
 # OS
 .DS_Store
 Thumbs.db
+# Service account keys
+service-account-key.json
+*.json
+!package.json
+!firebase.json
+!package-lock.json
+!tsconfig.json
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local development
+local-dev/
