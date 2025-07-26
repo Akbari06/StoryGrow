@@ -7,6 +7,7 @@ import asyncpg
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 import json
+from google.cloud.sql.connector import Connector
 
 from config import config
 
@@ -15,6 +16,7 @@ class Database:
     
     def __init__(self):
         self.pool: Optional[asyncpg.Pool] = None
+        self.connector: Optional[Connector] = None
         
         # Database configuration from environment
         self.db_config = {
@@ -31,20 +33,53 @@ class Database:
             'storygrow-2:europe-west1:storygrow-database'
         )
         
+        # Check if running on Cloud Run
+        self.is_cloud_run = os.getenv('K_SERVICE') is not None
+        
     async def connect(self):
         """Create connection pool"""
         try:
-            # Try direct connection first (for Cloud SQL with public IP)
-            self.pool = await asyncpg.create_pool(
-                **self.db_config,
-                min_size=1,
-                max_size=10,
-                command_timeout=60
-            )
-            print(f"[Database] Connected to PostgreSQL at {self.db_config['host']}")
+            if self.is_cloud_run and self.instance_connection_name:
+                # Use Cloud SQL connector for Cloud Run
+                print(f"[Database] Connecting via Cloud SQL connector to {self.instance_connection_name}")
+                
+                # Initialize connector
+                self.connector = Connector()
+                
+                # Create connection function for the pool
+                async def get_conn():
+                    conn = await self.connector.connect_async(
+                        self.instance_connection_name,
+                        "asyncpg",
+                        user=self.db_config['user'],
+                        password=self.db_config['password'],
+                        db=self.db_config['database']
+                    )
+                    return conn
+                
+                # Create pool with the connector
+                self.pool = await asyncpg.create_pool(
+                    connect=get_conn,
+                    min_size=1,
+                    max_size=10,
+                    command_timeout=60
+                )
+                print(f"[Database] Connected via Cloud SQL connector")
+            else:
+                # Direct connection for local development
+                self.pool = await asyncpg.create_pool(
+                    **self.db_config,
+                    min_size=1,
+                    max_size=10,
+                    command_timeout=60
+                )
+                print(f"[Database] Connected to PostgreSQL at {self.db_config['host']}")
+            
             return True
         except Exception as e:
             print(f"[Database] Connection failed: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     async def disconnect(self):
@@ -52,6 +87,9 @@ class Database:
         if self.pool:
             await self.pool.close()
             print("[Database] Disconnected from PostgreSQL")
+        if self.connector:
+            await self.connector.close()
+            print("[Database] Closed Cloud SQL connector")
     
     async def test_connection(self) -> Dict[str, Any]:
         """Test database connection and get basic info"""
