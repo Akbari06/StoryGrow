@@ -132,14 +132,33 @@ class MemoryPG:
             session_id = str(uuid.uuid4())
             
             async with self.db.pool.acquire() as conn:
+                # Map mood to emotion_type enum and store emotion data
+                mood_map = {
+                    'happy': 'happy',
+                    'sad': 'sad', 
+                    'angry': 'angry',
+                    'scared': 'scared',
+                    'excited': 'excited',
+                    'neutral': 'calm'
+                }
+                emotion = mood_map.get(session_data.get('mood', 'neutral'), 'calm')
+                
+                # Get highest emotion score for intensity
+                emotions = session_data.get('emotions', {})
+                intensity = 3  # default
+                if emotions:
+                    max_emotion = max(emotions.get('emotions', {}).values()) if emotions.get('emotions') else 0.5
+                    intensity = min(5, max(1, int(max_emotion * 5)))
+                
                 await conn.execute("""
-                    INSERT INTO sessions (id, kid_id, mood, emotion_scores, story_id)
-                    VALUES ($1, $2, $3, $4, $5)
+                    INSERT INTO emotion_logs (id, kid_id, emotion, intensity, context, story_id)
+                    VALUES ($1, $2, $3, $4, $5, $6)
                 """,
                     uuid.UUID(session_id),
                     uuid.UUID(kid_id),
-                    session_data.get('mood', 'neutral'),
-                    json.dumps(session_data.get('emotions', {})),
+                    emotion,
+                    intensity,
+                    json.dumps(session_data),  # Store full session as context
                     uuid.UUID(session_data.get('storyId')) if session_data.get('storyId') else None
                 )
                 
@@ -254,17 +273,17 @@ class MemoryPG:
             
             async with self.db.pool.acquire() as conn:
                 sessions = await conn.fetch("""
-                    SELECT * FROM sessions 
+                    SELECT * FROM emotion_logs 
                     WHERE kid_id = $1 
-                    AND created_at > NOW() - INTERVAL '%s days'
+                    AND created_at > NOW() - INTERVAL '{} days'
                     ORDER BY created_at DESC
-                """, uuid.UUID(real_kid_id), days)
+                """.format(days), uuid.UUID(real_kid_id))
                 
                 return [
                     {
                         'timestamp': s['created_at'],
-                        'mood': s['mood'],
-                        'emotions': s['emotion_scores'] or {},
+                        'mood': s['emotion'],  # emotion_logs uses 'emotion' not 'mood'
+                        'emotions': json.loads(s['context'] or '{}').get('emotions', {}),
                         'storyId': str(s['story_id']) if s['story_id'] else None
                     }
                     for s in sessions
