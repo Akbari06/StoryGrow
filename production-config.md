@@ -1,7 +1,7 @@
 # StoryGrow Production Configuration
 
 ## Google Cloud Project
-- **Project ID**: storygrow-796f0
+- **Project ID**: storygrow-2
 - **Region**: europe-west1
 
 ## Cloud Run
@@ -27,5 +27,5 @@
 
 ## Service Account
 - **Name**: storygrow-app
-- **Email**: storygrow-app@storygrow-796f0.iam.gserviceaccount.com
+- **Email**: storygrow-app@storygrow-2.iam.gserviceaccount.com
 - **Key File**: Already provided (service-account-key.json)
