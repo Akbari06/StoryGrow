@@ -53,43 +53,9 @@ COPY --from=backend-builder /app/src/backend ./src/backend
 # Copy frontend build
 COPY --from=frontend-builder /app/out /var/www/html
 
-# Copy nginx config
-COPY <<EOF /etc/nginx/sites-available/default
-server {
-    listen 80;
-    server_name _;
-    
-    location / {
-        root /var/www/html;
-        try_files \$uri \$uri/ /index.html;
-    }
-    
-    location /api {
-        proxy_pass http://localhost:8080;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-    }
-}
-EOF
-
-# Supervisor configuration
-COPY <<EOF /etc/supervisor/conf.d/supervisord.conf
-[supervisord]
-nodaemon=true
-
-[program:backend]
-command=python src/backend/main.py
-directory=/app
-autostart=true
-autorestart=true
-stderr_logfile=/var/log/backend.err.log
-stdout_logfile=/var/log/backend.out.log
-
-[program:nginx]
-command=/usr/sbin/nginx -g 'daemon off;'
-autostart=true
-autorestart=true
-EOF
+# Copy configuration files
+COPY nginx.conf /etc/nginx/sites-available/default
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Expose ports
 EXPOSE 80 8080
