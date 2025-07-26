@@ -1,0 +1,25 @@
+QUICK FIREBASE DEPLOYMENT STEPS
+==============================
+
+1. Open Mac Terminal (Cmd+Space, type "Terminal")
+
+2. Run these commands:
+
+cd /Users/tilmanresch/Documents/Projects/StoryGrow
+npm install -g firebase-tools
+firebase login
+firebase deploy --only hosting
+
+3. Your site will be live at:
+   https://storygrow-2.web.app
+
+That's it! 
+
+If firebase command not found, try:
+curl -sL https://firebase.tools | bash
+
+---
+IMPORTANT INFO:
+- Backend is already running at: https://storygrow-433353767151.europe-west1.run.app
+- Frontend files are already built in: src/frontend/out/
+- You're just uploading them to Firebase
