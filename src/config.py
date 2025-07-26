@@ -9,7 +9,7 @@ class Config:
     GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
     
     # Google Cloud
-    GCP_PROJECT_ID = os.getenv('GCP_PROJECT_ID', 'storygrow-demo')
+    GCP_PROJECT_ID = os.getenv('GCP_PROJECT_ID', 'storygrow-796f0')
     GCS_BUCKET_NAME = os.getenv('GCS_BUCKET_NAME', 'bucketstorygrow')
     
     # API Settings

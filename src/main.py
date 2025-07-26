@@ -140,7 +140,8 @@ def server_mode():
             uvicorn.run("api_server:app", 
                        host=config.API_HOST, 
                        port=config.API_PORT,
-                       log_level="info")
+                       log_level="info",
+                       reload=False)  # No reload in production
         else:
             # Local development - use subprocess
             api_process = subprocess.Popen(
