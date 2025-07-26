@@ -13,3 +13,4 @@ numpy==1.26.2
 asyncpg==0.30.0
 psycopg2-binary==2.9.9
 cloud-sql-python-connector[asyncpg]==1.18.3
+google-auth==2.40.3

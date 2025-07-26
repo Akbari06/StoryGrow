@@ -41,10 +41,19 @@ class Database:
         try:
             if self.is_cloud_run and self.instance_connection_name:
                 # Use Cloud SQL connector for Cloud Run
+                print(f"[Database] Running on Cloud Run (K_SERVICE={os.getenv('K_SERVICE')})")
                 print(f"[Database] Connecting via Cloud SQL connector to {self.instance_connection_name}")
+                print(f"[Database] Using user: {self.db_config['user']}")
                 
-                # Initialize connector
-                self.connector = Connector()
+                # Initialize connector with explicit project ID
+                from google.auth import default
+                try:
+                    credentials, project = default()
+                    print(f"[Database] Using project: {project}")
+                except Exception as e:
+                    print(f"[Database] Auth error: {e}")
+                
+                self.connector = Connector(refresh_strategy="lazy")
                 
                 # Create connection function for the pool
                 async def get_conn():
