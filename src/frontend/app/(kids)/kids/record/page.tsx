@@ -28,7 +28,15 @@ export default function RecordPage() {
         body: formData,
       })
 
-      const { upload_url } = await uploadResponse.json()
+      if (!uploadResponse.ok) {
+        throw new Error(`Upload failed: ${uploadResponse.status}`)
+      }
+
+      const uploadData = await uploadResponse.json()
+      
+      if (!uploadData.upload_url) {
+        throw new Error('No upload URL returned')
+      }
 
       // Create story
       const storyResponse = await fetch(`${config.apiUrl}/api/story/create`, {
@@ -37,20 +45,29 @@ export default function RecordPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          audio_url: upload_url,
-          child_id: 'demo_child_123', // In production, get from auth
+          audio_url: uploadData.upload_url,
+          child_id: 'demo_child_123', // TODO: Replace with useCurrentChildId() from AuthContext
           session_mood: currentMood,
           educational_focus: ['sharing', 'nature'],
           include_elements: [],
         }),
       })
 
-      const { story_id } = await storyResponse.json()
+      if (!storyResponse.ok) {
+        throw new Error(`Story creation failed: ${storyResponse.status}`)
+      }
+
+      const storyData = await storyResponse.json()
+      
+      if (!storyData.story_id) {
+        throw new Error('No story ID returned')
+      }
 
       // Navigate to story view with query parameter
-      router.push(`/kids/story?id=${story_id}`)
+      router.push(`/kids/story?id=${storyData.story_id}`)
     } catch (error) {
       console.error('Error creating story:', error)
+      alert('Oops! Something went wrong creating your story. Please try again.')
       setIsProcessing(false)
     }
   }

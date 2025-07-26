@@ -6,8 +6,8 @@ export default function KidsNavigation() {
   const router = useRouter()
   const pathname = usePathname()
 
-  // Don't show on home page
-  if (pathname === '/kids') return null
+  // Don't show on home pages
+  if (pathname === '/kids' || pathname === '/kids/home') return null
 
   return (
     <div className="fixed top-4 left-4 z-50">

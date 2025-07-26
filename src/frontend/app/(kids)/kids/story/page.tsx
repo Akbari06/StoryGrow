@@ -35,10 +35,21 @@ function StoryContent() {
   const fetchStory = async (id: string) => {
     try {
       const response = await fetch(`${config.apiUrl}/api/story/${id}`)
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`)
+      }
+      
       const data = await response.json()
+      
+      if (!data || !data.scenes) {
+        throw new Error('Invalid story data')
+      }
+      
       setStory(data)
     } catch (error) {
       console.error('Error fetching story:', error)
+      // Story will remain null, which shows error state
     } finally {
       setLoading(false)
     }

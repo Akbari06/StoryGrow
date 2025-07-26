@@ -25,19 +25,28 @@ export default function TypeStoryPage() {
         },
         body: JSON.stringify({
           text_input: storyText,
-          child_id: 'demo_child_123', // In production, get from auth
+          child_id: 'demo_child_123', // TODO: Replace with useCurrentChildId() from AuthContext
           session_mood: currentMood,
           educational_focus: ['sharing', 'nature'],
           include_elements: [],
         }),
       })
 
-      const { story_id } = await storyResponse.json()
+      if (!storyResponse.ok) {
+        throw new Error(`API error: ${storyResponse.status}`)
+      }
+
+      const data = await storyResponse.json()
+      
+      if (!data.story_id) {
+        throw new Error('No story ID returned')
+      }
 
       // Navigate to story view
-      router.push(`/kids/story?id=${story_id}`)
+      router.push(`/kids/story?id=${data.story_id}`)
     } catch (error) {
       console.error('Error creating story:', error)
+      alert('Oops! Something went wrong creating your story. Please try again.')
       setIsProcessing(false)
     }
   }

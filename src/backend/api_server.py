@@ -199,6 +199,24 @@ async def create_story(request: StoryRequest):
             }
             await memory.store('sessions', f"{request.child_id}_{datetime.now().timestamp()}", session_data)
             
+            # Store alerts if any were generated
+            emotion_data = results.get('emotions', {})
+            if emotion_data.get('alerts'):
+                for alert in emotion_data['alerts']:
+                    alert_data = {
+                        'childId': request.child_id,
+                        'storyId': story['id'],
+                        'timestamp': datetime.now(),
+                        'type': alert.get('type', 'emotional_concern'),
+                        'severity': alert.get('severity', 'low'),
+                        'message': alert.get('message', ''),
+                        'concerns': emotion_data.get('concerns', []),
+                        'read': False
+                    }
+                    alert_id = f"{request.child_id}_alert_{datetime.now().timestamp()}"
+                    await memory.store('alerts', alert_id, alert_data)
+                    print(f"[API] Stored alert: {alert['message']}")
+            
         # Calculate processing time
         processing_time = (datetime.now() - start_time).total_seconds()
         
@@ -316,6 +334,20 @@ async def get_parent_insights(child_id: str, days: int = 7):
         # Calculate insights
         insights = self._calculate_insights(emotional_history, context)
         
+        # Fetch stored alerts from database
+        try:
+            # In a real implementation, this would query alerts by child_id
+            # For now, using the basic memory storage pattern
+            stored_alerts = []
+            # This is a simplified approach - in production, use proper database queries
+            print(f"[API] Fetching alerts for child {child_id}")
+        except Exception as e:
+            print(f"[API] Error fetching alerts: {e}")
+            stored_alerts = []
+        
+        # Combine calculated insights with stored alerts
+        all_alerts = insights.get('alerts', []) + stored_alerts
+        
         return {
             "child_id": child_id,
             "timeframe": f"Last {days} days",
@@ -325,7 +357,7 @@ async def get_parent_insights(child_id: str, days: int = 7):
                 "favorite_themes": context.get('favorite_elements', {}).get('themes', [])[:3],
                 "favorite_characters": context.get('favorite_elements', {}).get('characters', [])[:3]
             },
-            "alerts": insights.get('alerts', []),
+            "alerts": all_alerts,
             "recommendations": insights.get('recommendations', []),
             "mood_chart_data": self._prepare_mood_chart_data(emotional_history)
         }
