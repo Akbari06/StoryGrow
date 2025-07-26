@@ -1,0 +1,38 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Google Cloud
+service-account-key.json
+*.serviceaccount.json
+gcs-keyfile.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# Node/Next.js
+src/frontend/node_modules/
+src/frontend/.next/
+src/frontend/out/
+src/frontend/.env.local
+src/frontend/.env.*.local
+
+# Uploads
+uploads/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
