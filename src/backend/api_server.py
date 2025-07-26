@@ -13,7 +13,7 @@ from datetime import datetime
 from config import config
 from planner import Planner
 from executor import Executor
-from memory import Memory
+from memory_pg import MemoryPG
 from database import db
 
 # Create FastAPI app
@@ -35,17 +35,25 @@ app.add_middleware(
 # Initialize core components
 planner = Planner()
 executor = Executor()
-memory = Memory()
+memory = None  # Will be initialized after DB connection
 
 # Startup event to connect to database
 @app.on_event("startup")
 async def startup_event():
     """Connect to database on startup"""
+    global memory
     connected = await db.connect()
     if connected:
         print("[API] Database connected successfully")
+        # Initialize PostgreSQL memory after DB connection
+        memory = MemoryPG(db)
+        print("[API] PostgreSQL memory initialized")
     else:
         print("[API] Warning: Database connection failed")
+        # Fallback to Firestore memory if PG fails
+        from memory import Memory
+        memory = Memory()
+        print("[API] Falling back to Firestore memory")
 
 # Shutdown event to disconnect from database
 @app.on_event("shutdown")
