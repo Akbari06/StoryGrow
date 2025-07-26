@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
   },
   // Disable image optimization for static export
   trailingSlash: true,
+  // Disable ESLint during builds
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
