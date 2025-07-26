@@ -1,0 +1,68 @@
+[debug] [2025-07-26T04:00:13.185Z] ----------------------------------------------------------------------
+[debug] [2025-07-26T04:00:13.187Z] Command:       /usr/local/bin/node /Users/tilmanresch/.npm-global/bin/firebase deploy --only hosting
+[debug] [2025-07-26T04:00:13.187Z] CLI Version:   14.11.1
+[debug] [2025-07-26T04:00:13.187Z] Platform:      darwin
+[debug] [2025-07-26T04:00:13.187Z] Node Version:  v22.17.0
+[debug] [2025-07-26T04:00:13.187Z] Time:          Sat Jul 26 2025 06:00:13 GMT+0200 (Mitteleuropäische Sommerzeit)
+[debug] [2025-07-26T04:00:13.188Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-26T04:00:13.323Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-26T04:00:13.324Z] > authorizing via signed-in user (storygrow3000@gmail.com)
+[debug] [2025-07-26T04:00:13.324Z] [iam] checking project storygrow-2 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-07-26T04:00:13.324Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:13.324Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:13.325Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2:testIamPermissions [none]
+[debug] [2025-07-26T04:00:13.325Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2:testIamPermissions x-goog-quota-user=projects/storygrow-2
+[debug] [2025-07-26T04:00:13.325Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-07-26T04:00:14.101Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2:testIamPermissions 200
+[debug] [2025-07-26T04:00:14.102Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-07-26T04:00:14.103Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:14.103Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:14.103Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/storygrow-2 [none]
+[debug] [2025-07-26T04:00:14.739Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/storygrow-2 404
+[debug] [2025-07-26T04:00:14.740Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/storygrow-2 {"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}}
+[debug] [2025-07-26T04:00:14.741Z] Couldn't get project info from firedata for storygrow-2, trying resource manager. Original error: FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/storygrow-2 had HTTP Error: 404, Requested entity was not found.
+[debug] [2025-07-26T04:00:14.741Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:14.741Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:14.742Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2 [none]
+[debug] [2025-07-26T04:00:14.942Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2 200
+[debug] [2025-07-26T04:00:14.942Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2 {"projectNumber":"433353767151","projectId":"storygrow-2","lifecycleState":"ACTIVE","name":"StoryGrow-2","labels":{"generative-language":"enabled"},"createTime":"2025-07-25T23:51:07.082810Z"}
+[debug] [2025-07-26T04:00:14.942Z] the default site does not exist on the Firebase project; asking Hosting.
+[debug] [2025-07-26T04:00:14.942Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:14.942Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:14.943Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/storygrow-2/sites pageToken=&pageSize=10
+[debug] [2025-07-26T04:00:15.862Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/storygrow-2/sites 200
+[debug] [2025-07-26T04:00:15.862Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/storygrow-2/sites {}
+[info] i  No Hosting site detected. 
+[debug] [2025-07-26T04:00:15.863Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:15.864Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:15.864Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2 [none]
+[debug] [2025-07-26T04:00:16.067Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2 200
+[debug] [2025-07-26T04:00:16.067Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/storygrow-2 {"projectNumber":"433353767151","projectId":"storygrow-2","lifecycleState":"ACTIVE","name":"StoryGrow-2","labels":{"generative-language":"enabled"},"createTime":"2025-07-25T23:51:07.082810Z"}
+[debug] [2025-07-26T04:00:16.068Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:16.068Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:16.068Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites siteId=storygrow-2&validateOnly=true
+[debug] [2025-07-26T04:00:16.068Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites {"appId":""}
+[debug] [2025-07-26T04:00:16.507Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites 200
+[debug] [2025-07-26T04:00:16.507Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites {"name":"projects/433353767151/sites/storygrow-2","defaultUrl":"https://storygrow-2.web.app","type":"DEFAULT_SITE"}
+[debug] [2025-07-26T04:00:52.061Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:52.065Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:00:52.066Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites siteId=3s3storygrow
+[debug] [2025-07-26T04:00:52.066Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites {"appId":""}
+[debug] [2025-07-26T04:00:53.102Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites 404
+[debug] [2025-07-26T04:00:53.102Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites {"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}}
+[warn] ⚠  Request to https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites?siteId=3s3storygrow had HTTP Error: 404, Requested entity was not found. 
+[debug] [2025-07-26T04:01:27.454Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:01:27.455Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:01:27.456Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites siteId=mend+using+letters%2C+numbers%2C+and+hyphens+%28e.g.+
+[debug] [2025-07-26T04:01:27.456Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites {"appId":""}
+[debug] [2025-07-26T04:01:28.391Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites 400
+[debug] [2025-07-26T04:01:28.392Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites {"error":{"code":400,"message":"Invalid name: `mend using letters, numbers, and hyphens (e.g. ` is invalid; try something like `mend-using-letters-numbers-and-hyphens-e-g` instead","status":"INVALID_ARGUMENT"}}
+[warn] ⚠  Invalid name: `mend using letters, numbers, and hyphens (e.g. ` is invalid; try something like `mend-using-letters-numbers-and-hyphens-e-g` instead 
+[debug] [2025-07-26T04:01:44.737Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:01:44.738Z] Checked if tokens are valid: true, expires at: 1753504406921
+[debug] [2025-07-26T04:01:44.739Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites siteId=cWEEEC232
+[debug] [2025-07-26T04:01:44.741Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites {"appId":""}
+[debug] [2025-07-26T04:01:45.766Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites 404
+[debug] [2025-07-26T04:01:45.766Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites {"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}}
+[warn] ⚠  Request to https://firebasehosting.googleapis.com/v1beta1/projects/433353767151/sites?siteId=cWEEEC232 had HTTP Error: 404, Requested entity was not found. 

@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "storygrowth2",
     "public": "src/frontend/out",
     "ignore": [
       "firebase.json",
