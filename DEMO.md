@@ -1,7 +1,7 @@
 # StoryGrow Demo Video
 
 ## Demo Video Link
-🎥 **[Watch the StoryGrow Demo](https://your-demo-video-link-here.com)**
+🎥 **[Watch the StoryGrow Demo](https://youtu.be/cMIXp53Qfvs)**
 
 *Note: Please update this link with your actual demo video URL*
 
