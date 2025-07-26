@@ -96,7 +96,7 @@ class Database:
         if self.pool:
             await self.pool.close()
             print("[Database] Disconnected from PostgreSQL")
-        if self.connector:
+        if hasattr(self, 'connector') and self.connector is not None:
             await self.connector.close()
             print("[Database] Closed Cloud SQL connector")
     

@@ -133,7 +133,7 @@ class MemoryPG:
             
             async with self.db.pool.acquire() as conn:
                 await conn.execute("""
-                    INSERT INTO emotion_sessions (id, kid_id, mood, emotion_scores, story_id)
+                    INSERT INTO sessions (id, kid_id, mood, emotion_scores, story_id)
                     VALUES ($1, $2, $3, $4, $5)
                 """,
                     uuid.UUID(session_id),
@@ -167,7 +167,7 @@ class MemoryPG:
                     return alert_id
                 
                 await conn.execute("""
-                    INSERT INTO parent_alerts 
+                    INSERT INTO alerts 
                     (id, parent_id, kid_id, alert_type, severity, message, metadata, story_id)
                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                 """,
@@ -254,7 +254,7 @@ class MemoryPG:
             
             async with self.db.pool.acquire() as conn:
                 sessions = await conn.fetch("""
-                    SELECT * FROM emotion_sessions 
+                    SELECT * FROM sessions 
                     WHERE kid_id = $1 
                     AND created_at > NOW() - INTERVAL '%s days'
                     ORDER BY created_at DESC
