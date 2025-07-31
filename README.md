@@ -1,4 +1,4 @@
-# StoryGrow - AI-Powered Family Storytelling Platform
+# StoryGrow - AI-Powered Family Storytelling Platform (🥈 ODSC x Google Cloud Hackathon)
 
 StoryGrow transforms children's daily experiences into personalized, illustrated stories using AI agents. Children (ages 3-8) share their day through voice or text, and our AI creates magical stories while monitoring emotional well-being for parents.
 
